@@ -6,6 +6,7 @@
 /node_modules
 
 # Files
+/discloud.Config
 /.env
 /.env.dev
 /.env.development
