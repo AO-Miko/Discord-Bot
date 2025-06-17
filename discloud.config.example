@@ -1,0 +1,9 @@
+AUTORESTART=true
+AVATAR=https://i.imgur.com/bWhx7OT.png
+DESCRIPTION=yourdescription
+MAIN=build/index.js
+NAME=yourname
+RAM=256
+START=npm run start
+TYPE=bot
+VERSION=latest
