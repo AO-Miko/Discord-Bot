@@ -5,6 +5,7 @@ import type { Client } from "discord.js";
 import { env, logger } from "#settings";
 import ck from "chalk";
 import path from "node:path";
+import { serverErrorHandler } from "#functions";
 
 export async function startServer(client: Client<true>){
     const app = fastify();
@@ -18,7 +19,7 @@ export async function startServer(client: Client<true>){
         routeParams: true,
         options: client,
     });
-
+    app.setErrorHandler(serverErrorHandler)
     const port = Number(env.SERVER_PORT ?? 3000);
 
     await app.listen({ port, host: "0.0.0.0" })
