@@ -3,6 +3,7 @@ import { ApplicationCommandType, ChannelType, MessageFlags } from "discord.js";
 const allowed = "1100831477190643842"
 const channeltoinform = "1282733468543094824"
 createCommand({
+    global: true,
     name: "categoryperm",
     description: "Manage permissions for all channels in a category",
     type: ApplicationCommandType.ChatInput,
