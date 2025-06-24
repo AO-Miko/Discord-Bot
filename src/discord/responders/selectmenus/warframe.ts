@@ -1,6 +1,6 @@
 import { createResponder, ResponderType } from "#base";
 import { createRow } from "@magicyan/discord";
-import { ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, StringSelectMenuOptionBuilder } from "discord.js";
+import { ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, StringSelectMenuBuilder, StringSelectMenuInteraction, StringSelectMenuOptionBuilder } from "discord.js";
 
 // Helper function to create back button
 function createBackButton() {
@@ -372,7 +372,7 @@ createResponder({
             console.error("Error in fissures select menu:", error);
             await interaction.followUp({
                 content: "❌ An error occurred while processing your selection. Please try again.",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
     }
@@ -409,7 +409,7 @@ createResponder({
             console.error("Error in nightwave select menu:", error);
             await interaction.followUp({
                 content: "❌ An error occurred while processing your selection. Please try again.",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
     }
@@ -443,7 +443,7 @@ createResponder({
             console.error("Error in invasion select menu:", error);
             await interaction.followUp({
                 content: "❌ An error occurred while processing your selection. Please try again.",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
     }

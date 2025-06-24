@@ -30,6 +30,48 @@ function hasPermission(interaction: any): boolean {
     
     return false;
 }
+
+/**
+ * Check if bot has necessary permissions in the guild
+ */
+function hasBotPermissions(botMember: any): { hasPermission: boolean; missingPermissions: string[] } {
+     const requiredPermissions = [
+         PermissionFlagsBits.ViewChannel,
+         PermissionFlagsBits.ManageChannels,
+         PermissionFlagsBits.ManageRoles,
+         PermissionFlagsBits.SendMessages,
+         PermissionFlagsBits.EmbedLinks
+     ];
+     
+     const missingPermissions: string[] = [];
+     
+     for (const permission of requiredPermissions) {
+         if (!botMember?.permissions?.has(permission)) {
+             switch (permission) {
+                 case PermissionFlagsBits.ViewChannel:
+                     missingPermissions.push("View Channel");
+                     break;
+                 case PermissionFlagsBits.ManageChannels:
+                     missingPermissions.push("Manage Channels");
+                     break;
+                 case PermissionFlagsBits.ManageRoles:
+                     missingPermissions.push("Manage Roles");
+                     break;
+                 case PermissionFlagsBits.SendMessages:
+                     missingPermissions.push("Send Messages");
+                     break;
+                 case PermissionFlagsBits.EmbedLinks:
+                     missingPermissions.push("Embed Links");
+                     break;
+             }
+         }
+     }
+     
+     return {
+         hasPermission: missingPermissions.length === 0,
+         missingPermissions
+     };
+ }
 createCommand({
     global: true,
     name: "categoryperm",
@@ -169,7 +211,6 @@ createCommand({
         if (!hasPermission(interaction)) {
             await interaction.reply({
                 content: "❌ You don't have permission to use this command.",
-                ephemeral: true,
                 flags: MessageFlags.Ephemeral
             });
             return;
@@ -179,6 +220,28 @@ createCommand({
         await interaction.deferReply({ flags: ephemeral ? MessageFlags.Ephemeral : undefined });
 
         try {
+            // Check bot permissions
+            const botMember = interaction.guild?.members?.me;
+            if (!botMember) {
+                await interaction.editReply("❌ Unable to verify bot permissions.");
+                return;
+            }
+            
+            const permissionCheck = hasBotPermissions(botMember);
+            if (!permissionCheck.hasPermission) {
+                await interaction.editReply(
+                    `❌ The bot is missing required permissions:\n` +
+                    `Missing permissions: **${permissionCheck.missingPermissions.join(", ")}**\n\n` +
+                    `Please ensure the bot has the following permissions:\n` +
+                    `• View Channel\n` +
+                    `• Manage Channels\n` +
+                    `• Manage Roles\n` +
+                    `• Send Messages\n` +
+                    `• Embed Links`
+                );
+                return;
+            }
+
             const categoryId = interaction.options.getString("category", true);
             const role = interaction.options.getRole("role", true);
             const permission = interaction.options.getString("permission", true);

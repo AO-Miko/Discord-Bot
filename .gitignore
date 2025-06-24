@@ -11,7 +11,7 @@
 /.env.dev
 /.env.development
 /package-lock.json
-
+/bot_notification.json
 # Config files
 /firebase.json
 

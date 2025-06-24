@@ -43,6 +43,9 @@
     "#functions": [
       "./build/functions/index.js"
     ],
+    "#functions/configManager.js": [
+      "./build/functions/configManager.js"
+    ],
     "#menus": [
       "./build/menus/index.js"
     ],
