@@ -1,7 +1,35 @@
 import { createCommand } from "#base";
-import { ApplicationCommandType, ChannelType, MessageFlags } from "discord.js";
-const allowed = "1100831477190643842"
-const channeltoinform = "1282733468543094824"
+import { ApplicationCommandType, ChannelType, MessageFlags, PermissionFlagsBits } from "discord.js";
+import { logger } from "#settings";
+
+// Table of allowed user IDs - easier to manage multiple users
+const allowedUsers = [
+    "1100831477190643842", // Original user
+    // Add more user IDs here as needed
+    // "123456789012345678",
+    // "987654321098765432",
+];
+
+const channeltoinform = "1282733468543094824";
+
+/**
+ * Check if user has permission to use this command
+ * @param interaction - The command interaction
+ * @returns true if user has permission, false otherwise
+ */
+function hasPermission(interaction: any): boolean {
+    // Check if user is in the allowed list
+    if (allowedUsers.includes(interaction.user.id)) {
+        return true;
+    }
+    
+    // Check if user has Administrator permission
+    if (interaction.member?.permissions?.has(PermissionFlagsBits.Administrator)) {
+        return true;
+    }
+    
+    return false;
+}
 createCommand({
     global: true,
     name: "categoryperm",
@@ -137,13 +165,12 @@ createCommand({
         }
     ],
     async run(interaction) {
-        // Check if the user has the specific ID
-        if (interaction.user.id !== allowed) {
+        // Check if the user has permission to use this command
+        if (!hasPermission(interaction)) {
             await interaction.reply({
                 content: "❌ You don't have permission to use this command.",
                 ephemeral: true,
                 flags: MessageFlags.Ephemeral
-
             });
             return;
         }
@@ -201,7 +228,7 @@ createCommand({
                         failedChannels.push(channel.name || 'Unknown Channel');
                     }
                 } catch (error) {
-                    console.error(`Error updating permissions for channel ${channel.name}:`, error);
+                    logger.error(`Error updating permissions for channel ${channel.name}:`, error);
                     failCount++;
                     failedChannels.push(channel.name || 'Unknown Channel');
                 }
@@ -258,18 +285,18 @@ createCommand({
                     await informChannel.send(notificationMessage);
                 }
             } catch (notificationError) {
-                console.error("Error sending notification:", notificationError);
+                logger.error("Error sending notification:", notificationError);
                 // Don't fail the command if notification fails
             }
 
         } catch (error) {
-            console.error("Error in categoryPermEdit command:", error);
+            logger.error("Error in categoryPermEdit command:", error);
             await interaction.editReply("❌ An error occurred while processing the command.");
         }
     },
     async autocomplete(interaction) {
-        // Only allow the specific user to use autocomplete
-        if (interaction.user.id !== allowed) {
+        // Only allow authorized users to use autocomplete
+        if (!hasPermission(interaction)) {
             await interaction.respond([]);
             return;
         }
