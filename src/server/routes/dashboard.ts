@@ -1,13 +1,54 @@
-import { defineRoutes } from "#server";
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { StatusCodes } from "http-status-codes";
-import { TemplateRenderer, type DashboardData } from "../utils/templateRenderer.js";
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import type { Client } from 'discord.js';
+import { defineRoutes } from '../index.js';
 
-export default defineRoutes((app, client) => {
-    // API endpoint for JSON data
-    app.get("/api", (_, res) => {
-        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
+export interface DashboardData {
+    botName: string;
+    botAvatar: string;
+    inviteUrl: string;
+    guildsCount: number;
+    usersCount: string;
+    commandsCount: number;
+    ping: number;
+    version: string;
+}
+
+export class TemplateRenderer {
+    private static templateCache: Map<string, string> = new Map();
+
+    static renderTemplate(templateName: string, data: Record<string, any>): string {
+        let template = this.templateCache.get(templateName);
         
+        if (!template) {
+            // Use local templates directory within routes
+            const isProduction = process.env.NODE_ENV === 'production';
+            const basePath = isProduction ? 'build' : 'src';
+            const templatePath = join(process.cwd(), basePath, 'server', 'routes', 'templates', `${templateName}.html`);
+            template = readFileSync(templatePath, 'utf-8');
+            this.templateCache.set(templateName, template);
+        }
 
+        return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+            return data[key] !== undefined ? String(data[key]) : match;
+        });
+    }
+
+    static renderDashboard(data: DashboardData): string {
+        return this.renderTemplate('dashboard', data);
+    }
+
+    static clearCache(): void {
+        this.templateCache.clear();
+    }
+}
+
+export default defineRoutes((app: FastifyInstance, client: Client<true>) => {
+    // API endpoint for JSON data
+    app.get("/api", (_: FastifyRequest, res: FastifyReply) => {
+        const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
         
         // Available commands data
         const commands = [
@@ -59,7 +100,7 @@ export default defineRoutes((app, client) => {
     });
 
     // Main HTML dashboard
-    app.get("/", (_, res) => {
+    app.get("/", (_: FastifyRequest, res: FastifyReply) => {
         const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
         
         const dashboardData: DashboardData = {
@@ -78,7 +119,7 @@ export default defineRoutes((app, client) => {
     });
 
     // Keep the redirect endpoint
-    app.get("/invite", (_, res) => {
+    app.get("/invite", (_: FastifyRequest, res: FastifyReply) => {
         const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
         return res.redirect(inviteUrl);
     });
