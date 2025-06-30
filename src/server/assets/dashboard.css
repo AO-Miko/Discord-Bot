@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #36393f;
+    color: #dcddde;
+    line-height: 1.6;
+}
+
+.navbar {
+    background: #2f3136;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.logo h1 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.invite-btn {
+    background: #5865f2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.invite-btn:hover {
+    background: #4752c4;
+}
+
+.hero {
+    background: linear-gradient(135deg, #5865f2 0%, #7289da 100%);
+    padding: 4rem 2rem;
+    text-align: center;
+    color: white;
+}
+
+.hero h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(67, 181, 129, 0.1);
+    color: #43b581;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #43b581;
+    margin-bottom: 2rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #43b581;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.stats-section {
+    padding: 4rem 0;
+    background: #2f3136;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: #36393f;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #40444b;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #5865f2;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #b9bbbe;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.features-section {
+    padding: 4rem 0;
+    background: #36393f;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #b9bbbe;
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background: #2f3136;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #40444b;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.feature-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.feature-desc {
+    color: #b9bbbe;
+    line-height: 1.5;
+}
+
+.commands-section {
+    padding: 4rem 0;
+    background: #2f3136;
+}
+
+.commands-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.command-card {
+    background: #36393f;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #40444b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.command-info h4 {
+    color: #5865f2;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.command-info p {
+    color: #b9bbbe;
+    font-size: 0.9rem;
+}
+
+.command-meta {
+    text-align: right;
+}
+
+.command-category {
+    background: #5865f2;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.command-usage {
+    color: #b9bbbe;
+    font-size: 0.8rem;
+}
+
+.footer {
+    background: #23272a;
+    padding: 2rem;
+    text-align: center;
+    color: #72767d;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+    
+    .hero h2 {
+        font-size: 2rem;
+    }
+    
+    .hero {
+        padding: 2rem 1rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{botName}} - Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/assets/dashboard.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{{botAvatar}}" alt="{{botName}}">
+            <h1>{{botName}}</h1>
+        </div>
+        <a href="{{inviteUrl}}" class="invite-btn" target="_blank">📨 Invite to Server</a>
+    </nav>
+    
+    <section class="hero">
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>Online & Ready</span>
+        </div>
+        <h2>Welcome to {{botName}}</h2>
+        <p>A powerful Discord bot designed to enhance your server experience with Warframe integration, advanced notifications, and administrative tools.</p>
+    </section>
+    
+    <section class="stats-section">
+        <div class="container">
+            <h3 class="section-title">Live Statistics</h3>
+            <p class="section-subtitle">Real-time data from across all servers</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{guildsCount}}</div>
+                    <div class="stat-label">Servers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{usersCount}}</div>
+                    <div class="stat-label">Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{commandsCount}}</div>
+                    <div class="stat-label">Commands</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ping}}ms</div>
+                    <div class="stat-label">Ping</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">v{{version}}</div>
+                    <div class="stat-label">Version</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features-section">
+        <div class="container">
+            <h3 class="section-title">Key Features</h3>
+            <p class="section-subtitle">Everything you need to manage and enhance your Discord server</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h4 class="feature-title">Warframe Integration</h4>
+                    <p class="feature-desc">Get real-time Warframe alerts, events, and world state information directly in your Discord server.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h4 class="feature-title">Smart Notifications</h4>
+                    <p class="feature-desc">Configure intelligent bot notifications to keep your community informed and engaged.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4 class="feature-title">Permission Management</h4>
+                    <p class="feature-desc">Advanced tools for managing category permissions and maintaining server security.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h4 class="feature-title">Real-time Updates</h4>
+                    <p class="feature-desc">Live data synchronization ensures your server always has the latest information.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h4 class="feature-title">Admin Controls</h4>
+                    <p class="feature-desc">Comprehensive administrative tools for server owners and moderators.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h4 class="feature-title">Analytics Dashboard</h4>
+                    <p class="feature-desc">Monitor bot performance and usage statistics through this web interface.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="commands-section">
+        <div class="container">
+            <h3 class="section-title">Available Commands</h3>
+            <p class="section-subtitle">Powerful commands to enhance your server experience</p>
+            
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-info">
+                        <h4>/warframe</h4>
+                        <p>Get live Warframe game data including alerts, events, and world state information</p>
+                    </div>
+                    <div class="command-meta">
+                        <div class="command-category">Gaming</div>
+                        <div class="command-usage">High Usage</div>
+                    </div>
+                </div>
+                <div class="command-card">
+                    <div class="command-info">
+                        <h4>/bot_notification</h4>
+                        <p>Configure and manage bot notification settings for your server</p>
+                    </div>
+                    <div class="command-meta">
+                        <div class="command-category">Administration</div>
+                        <div class="command-usage">Medium Usage</div>
+                    </div>
+                </div>
+                <div class="command-card">
+                    <div class="command-info">
+                        <h4>/categorypermissionedit</h4>
+                        <p>Edit permissions for Discord categories with advanced controls</p>
+                    </div>
+                    <div class="command-meta">
+                        <div class="command-category">Administration</div>
+                        <div class="command-usage">Low Usage</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 {{botName}} Discord Bot • <a href="/api" style="color: #5865f2;">API Documentation</a></p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import fastify, { type FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
 import autoload from "@fastify/autoload";
+import staticFiles from "@fastify/static";
 import type { Client } from "discord.js";
 import { env, logger } from "#settings";
 import ck from "chalk";
@@ -14,6 +15,10 @@ export async function startServer(client: Client<true>){
         logger.success(`${ck.yellow(route.method)} ${ck.blue(route.path)}`);
     });
     app.register(cors, { origin: "*" });
+    app.register(staticFiles, {
+        root: path.join(import.meta.dirname, "assets"),
+        prefix: "/assets/"
+    });
     app.register(autoload, {
         dir: path.join(import.meta.dirname, "routes"),
         routeParams: true,
