@@ -22,3 +22,4 @@
 *.exe
 *.db
 *.development.json
+src/server/routes/.well-known/discord.ts
