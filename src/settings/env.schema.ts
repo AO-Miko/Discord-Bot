@@ -5,7 +5,5 @@ export const envSchema = z.object({
     WEBHOOK_LOGS_URL: z.string().url().optional(),
     SERVER_PORT: z.string().refine(v => !Number.isNaN(Number(v)), "Invalid server port").optional(),
     BOT_OWNER_ID: z.string().optional(),
-    
-
     // Env vars...
 });
