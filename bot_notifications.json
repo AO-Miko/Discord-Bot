@@ -1,0 +1,24 @@
+{
+  "guilds": {
+    "926853877029036102": {
+      "bot_notification": "disabled",
+      "channelid": "",
+      "enabled": false
+    },
+    "954672024154939422": {
+      "bot_notification": "disabled",
+      "channelid": "",
+      "enabled": false
+    },
+    "1121799167405207612": {
+      "bot_notification": "enabled",
+      "channelid": "1332340435657691156",
+      "enabled": true
+    },
+    "1389571321318604890": {
+      "bot_notification": "disabled",
+      "channelid": "",
+      "enabled": false
+    }
+  }
+}
