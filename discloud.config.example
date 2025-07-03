@@ -1,9 +1,10 @@
 AUTORESTART=true
 AVATAR=https://i.imgur.com/bWhx7OT.png
-DESCRIPTION=yourdescription
+DESCRIPTION=A Discord Bot
+ID=bot
 MAIN=build/index.js
-NAME=yourname
-RAM=256
+NAME=Discord Bot
+RAM=2048
 START=npm run start
 TYPE=bot
 VERSION=latest
