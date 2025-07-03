@@ -19,7 +19,14 @@
     "@magicyan/discord": "^1.4.11",
     "chalk": "^5.4.1",
     "discord.js": "^14.21.0",
+<<<<<<< HEAD
     "dotenv": "^17.0.1",
+=======
+<<<<<<< HEAD
+    "dotenv": "^17.0.1",
+=======
+>>>>>>> e1e70232f166ad6dbe7e2bdfbd1c066f0ed91b6f
+>>>>>>> 191fd90c97277a7652c928507ca16bc24697e251
     "fast-glob": "^3.3.3",
     "fastify": "^5.4.0",
     "http-status-codes": "^2.3.0",
