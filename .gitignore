@@ -6,12 +6,11 @@
 /node_modules
 
 # Files
-/discloud.Config
 /.env
 /.env.dev
 /.env.development
 /package-lock.json
-/bot_notifications.json
+/guild_settings.json
 # Config files
 /firebase.json
 
@@ -22,4 +21,3 @@
 *.exe
 *.db
 *.development.json
-src/server/routes/.well-known/discord.ts

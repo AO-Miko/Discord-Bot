@@ -1,7 +1,7 @@
 import { createCommand } from "#base";
 import { ApplicationCommandType, ChannelType, MessageFlags, PermissionFlagsBits, EmbedBuilder } from "discord.js";
 import { logger } from "#settings";
-import { configManager } from "#functions/configManager.js";
+import { configManager, validateDiscordId } from "#functions";
 
 
 
@@ -142,6 +142,14 @@ createCommand({
       }
 
       if (action === "add") {
+        // Validate channel ID
+        if (!validateDiscordId(channel!.id)) {
+          await interaction.editReply({
+            content: "❌ Invalid channel ID provided."
+          });
+          return;
+        }
+        
         // Check if notification is already configured
         const existingConfig = await configManager.getGuildConfig(guildId);
         if (existingConfig?.enabled) {
@@ -179,6 +187,14 @@ createCommand({
         }
 
       } else if (action === "edit") {
+        // Validate channel ID
+        if (!validateDiscordId(channel!.id)) {
+          await interaction.editReply({
+            content: "❌ Invalid channel ID provided."
+          });
+          return;
+        }
+        
         // Check if notification is configured
         const existingConfig = await configManager.getGuildConfig(guildId);
         if (!existingConfig?.enabled) {

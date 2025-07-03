@@ -1,4 +1,4 @@
-import { ApplicationCommandType, CacheType, ClientEvents, Collection, PermissionResolvable } from "discord.js";
+import { ApplicationCommandType, CacheType, ClientEvents, Collection, PermissionResolvable, InteractionContextType } from "discord.js";
 import { addRoute } from "rou3";
 import { baseCommandLog, CommandData, CommandType } from "./base.command.js";
 import { baseEventLog, EventData } from "./base.event.js";
@@ -46,6 +46,7 @@ export function setupCreators(options: SetupCreatorsOptions = {}){
             /** @defaults */
             data.type??=ApplicationCommandType.ChatInput as Type
             data.dmPermission??=false as DmPermission;
+            data.contexts??=[InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel];
             if (options.commands?.defaultMemberPermissions){
                 data.defaultMemberPermissions??=options.commands?.defaultMemberPermissions;
             }

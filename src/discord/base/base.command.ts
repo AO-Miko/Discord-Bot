@@ -1,23 +1,9 @@
 import { logger } from "#settings";
 import { brBuilder } from "@magicyan/discord";
 import ck from "chalk";
-import {
-    ApplicationCommand,
-    ApplicationCommandOptionChoiceData,
-    ApplicationCommandType,
-    AutocompleteInteraction,
-    CacheType,
-    ChatInputApplicationCommandData,
-    ChatInputCommandInteraction,
-    Client,
-    Collection,
-    CommandInteraction,
-    MessageApplicationCommandData,
-    MessageContextMenuCommandInteraction,
-    UserApplicationCommandData,
-    UserContextMenuCommandInteraction,
-    InteractionContextType
-} from "discord.js";
+import { ApplicationCommand, ApplicationCommandOptionChoiceData, ApplicationCommandType, AutocompleteInteraction, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, Collection, CommandInteraction, MessageApplicationCommandData, MessageContextMenuCommandInteraction, UserApplicationCommandData, UserContextMenuCommandInteraction, InteractionContextType } from "discord.js";
+import { rateLimiter } from "#functions";
+
 import { baseStorage } from "./base.storage.js";
 import { ContextName, SlashName } from "./base.types.js";
 
@@ -47,21 +33,33 @@ T extends ApplicationCommandType.Message ?
         autocomplete?(interaction: AutocompleteInteraction<Cache<D>>): AutocompleteReturn;
     }
 
-    export type CommandData<
+export type CommandData<
     Name extends string,
     DmPermission extends boolean,
     Type extends CommandType
-  > = ApplicationCommandData<Name, DmPermission, Type> & {
-    type?: Type;
+> = ApplicationCommandData<Name, DmPermission, Type> & {
+    type?: Type, 
     dmPermission?: DmPermission;
     global?: boolean;
-    contexts?: readonly InteractionContextType[]; // ← Ensure this is used
-  };
+    contexts?: readonly InteractionContextType[];
+}
 
 export type GenericCommandData = CommandData<any, any, any>;
 
 export async function baseCommandHandler(interaction: CommandInteraction){
 	const { onNotFound, middleware, onError } = baseStorage.config.commands;
+    
+    // Rate limiting check
+    const rateLimitResult = rateLimiter.checkLimit(interaction.user.id, 'command');
+    if (!rateLimitResult.allowed) {
+        const resetTime = Math.ceil((rateLimitResult.resetTime! - Date.now()) / 1000);
+        await interaction.reply({
+            content: `⏰ You're sending commands too quickly! Please wait ${resetTime} seconds before trying again.`,
+            ephemeral: true
+        }).catch(() => {});
+        return;
+    }
+    
     const command = baseStorage.commands.get(interaction.commandName);
 
     if (!command) {
@@ -108,7 +106,7 @@ export async function baseRegisterCommands(client: Client<true>) {
         // Apply default contexts to global commands
         const globalCommandsWithContexts = globalCommands.map(command => ({
             ...command,
-            contexts: command.contexts ?? [0,1,2]
+            contexts: command.contexts ?? [InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel]
         }));
 
         await client.application.commands.set(globalCommandsWithContexts)
@@ -135,11 +133,9 @@ export async function baseRegisterCommands(client: Client<true>) {
         logger.log(brBuilder(messages));
         return;
     }
-
     for (const guild of client.guilds.cache.values()) {
         guild.commands.set([]);
     }
-
     const commands = Array.from(baseStorage.commands.values());
     await client.application.commands.set(commands)
     .then(commands => {
