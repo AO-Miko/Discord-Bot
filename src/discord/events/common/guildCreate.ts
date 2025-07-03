@@ -1,6 +1,6 @@
 import { createEvent } from "#base";
 import { logger } from "#settings";
-import { configManager } from "#functions/configManager.js";
+import { configManager } from "#functions";
 
 createEvent({
     event: "guildCreate",

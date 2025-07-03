@@ -2,15 +2,29 @@ import { createCommand } from "#base";
 import { ApplicationCommandType, ChannelType, MessageFlags, PermissionFlagsBits } from "discord.js";
 import { logger } from "#settings";
 
-// Table of allowed user IDs - easier to manage multiple users
-const allowedUsers = [
-    "1100831477190643842", // Original user
-    // Add more user IDs here as needed
-    // "123456789012345678",
-    // "987654321098765432",
-];
+import { readFileSync } from "fs";
+import { join } from "path";
+import { sanitizeString, validateDiscordId } from "#functions";
 
-const channeltoinform = "1282733468543094824";
+// Load settings from guild_settings.json
+let guildSettings: any;
+try {
+    const settingsPath = join(process.cwd(), "guild_settings.json");
+    const settingsData = readFileSync(settingsPath, "utf8");
+    guildSettings = JSON.parse(settingsData);
+} catch (error) {
+    logger.error("Failed to load guild_settings.json:", error);
+    guildSettings = { categoryPermEdit: { useBotOwner: true }, guilds: {} };
+}
+
+// Get configuration from guild settings
+const useBotOwner = guildSettings.categoryPermEdit?.useBotOwner || false;
+
+// Function to get channel for guild
+function getChannelForGuild(guildId: string | undefined): string | null {
+    if (!guildId) return null;
+    return guildSettings.guilds?.[guildId]?.channelid || null;
+}
 
 /**
  * Check if user has permission to use this command
@@ -18,9 +32,12 @@ const channeltoinform = "1282733468543094824";
  * @returns true if user has permission, false otherwise
  */
 function hasPermission(interaction: any): boolean {
-    // Check if user is in the allowed list
-    if (allowedUsers.includes(interaction.user.id)) {
-        return true;
+    // Check if user is bot owner (if enabled in settings)
+    if (useBotOwner && interaction.client.application?.owner) {
+        const ownerId = interaction.client.application.owner.id || interaction.client.application.owner;
+        if (interaction.user.id === ownerId) {
+            return true;
+        }
     }
     
     // Check if user has Administrator permission
@@ -246,6 +263,23 @@ createCommand({
             const role = interaction.options.getRole("role", true);
             const permission = interaction.options.getString("permission", true);
             const action = interaction.options.getString("action", true);
+            
+            // Validate IDs
+            if (!validateDiscordId(categoryId) || !validateDiscordId(role.id)) {
+                await interaction.editReply({
+                    content: "❌ Invalid category or role ID provided."
+                });
+                return;
+            }
+            
+            // Sanitize permission input
+            const sanitizedPermission = sanitizeString(permission);
+            if (!sanitizedPermission) {
+                await interaction.editReply({
+                    content: "❌ Invalid permission type provided."
+                });
+                return;
+            }
 
             // Get the category channel
             const category = await interaction.guild?.channels.fetch(categoryId);
@@ -332,20 +366,22 @@ createCommand({
 
             // Send notification to the specified channel
             try {
-                const notificationChannel = await interaction.guild?.channels.fetch();
-                const informChannel = notificationChannel?.get(channeltoinform);
-                if (informChannel?.isTextBased()) {
-                    const channelList = successfulChannels.map(ch => `<#${ch.id}>`).join(", ");
-                    const notificationMessage = `🔧 **Permission Change Notification**\n\n` +
-                        `**User:** ${interaction.user.tag} (${interaction.user.id})\n` +
-                        `**Category:** ${category.name}\n` +
-                        `**Role:** \`${role.name}\`\n` +
-                        `**Permission:** \`${readablePermission}\`\n` +
-                        `**Action:** ${actionText}\n` +
-                        `**Channels affected:** ${successCount} (${channelList})\n` +
-                        (failCount > 0 ? `**Failed channels:** ${failCount}` : "");
-                    
-                    await informChannel.send(notificationMessage);
+                const channelId = getChannelForGuild(interaction.guild?.id);
+                if (channelId) {
+                    const informChannel = await interaction.guild?.channels.fetch(channelId);
+                    if (informChannel?.isTextBased()) {
+                        const channelList = successfulChannels.map(ch => `<#${ch.id}>`).join(", ");
+                        const notificationMessage = `🔧 **Permission Change Notification**\n\n` +
+                            `**User:** ${interaction.user.tag} (${interaction.user.id})\n` +
+                            `**Category:** ${category.name}\n` +
+                            `**Role:** \`${role.name}\`\n` +
+                            `**Permission:** \`${readablePermission}\`\n` +
+                            `**Action:** ${actionText}\n` +
+                            `**Channels affected:** ${successCount} (${channelList})\n` +
+                            (failCount > 0 ? `**Failed channels:** ${failCount}` : "");
+                        
+                        await informChannel.send(notificationMessage);
+                    }
                 }
             } catch (notificationError) {
                 logger.error("Error sending notification:", notificationError);

@@ -3,7 +3,7 @@ import ck from "chalk";
 declare const Bun: { version: string };
 const isBun = typeof Bun !== "undefined";
 
-export const BASE_VERSION = "1.2.8" as const; // DO NOT CHANGE THIS VAR
+export const BASE_VERSION = "1.3.0" as const; // DO NOT CHANGE THIS VAR
 export const RUNTIME_VERSION = isBun ? Bun.version : process.versions.node; 
 
 const engineName = isBun
