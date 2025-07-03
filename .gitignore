@@ -10,7 +10,7 @@
 /.env.dev
 /.env.development
 /package-lock.json
-/guilds_settings.json
+/guild_settings.json
 # Config files
 /firebase.json
 
