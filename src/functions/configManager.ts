@@ -3,9 +3,12 @@ import fs from "fs/promises";
 import path from "path";
 import { Client } from "discord.js";
 
-const CONFIG_FILE_PATH = path.join(process.cwd(), "bot_notifications.json");
+const CONFIG_FILE_PATH = path.join(process.cwd(), "guild_settings.json");
 
 interface NotificationConfig {
+  categoryPermEdit?: {
+    useBotOwner: boolean;
+  };
   guilds: {
     [guildId: string]: {
       bot_notification: string;
@@ -40,8 +43,11 @@ class ConfigManager {
       const data = await fs.readFile(CONFIG_FILE_PATH, "utf-8");
       this.config = JSON.parse(data);
     } catch (error) {
-      logger.warn("Bot notifications config file not found, creating default config");
-      this.config = { guilds: {} };
+      logger.warn("Guild settings config file not found, creating default config");
+      this.config = { 
+        categoryPermEdit: { useBotOwner: true },
+        guilds: {} 
+      };
       await this.saveConfig();
     } finally {
       this.isLoading = false;

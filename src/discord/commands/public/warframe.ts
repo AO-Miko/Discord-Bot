@@ -1,6 +1,7 @@
 import { createCommand } from "#base";
 import { createRow } from "@magicyan/discord";
 import { ApplicationCommandType, ButtonBuilder, ButtonStyle, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { apiManager } from "#functions";
 
 // Type definitions for Warframe API responses
 interface WarframeAlert {
@@ -22,50 +23,15 @@ interface WarframeWorldState {
     [key: string]: any;
 }
 
-// Cache for API responses to reduce redundant requests
-interface CacheEntry {
-    data: any;
-    timestamp: number;
-}
-
-const apiCache = new Map<string, CacheEntry>();
-const CACHE_DURATION = 60000; // 1 minute cache
-
-const WARFRAME_API_BASE = "https://api.warframestat.us/pc";
 const WARFRAME_API_LANGUAGE = "?language=en";
 
-// Optimized fetch function with caching and error handling
+// Optimized fetch function with caching and error handling using API manager
 async function fetchWithCache(endpoint: string): Promise<any> {
-    const cacheKey = endpoint;
-    const cached = apiCache.get(cacheKey);
-
-    // Return cached data if still valid
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return cached.data;
-    }
-
     try {
-        const response = await fetch(`${WARFRAME_API_BASE}${endpoint}${WARFRAME_API_LANGUAGE}`);
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        // Cache the response
-        apiCache.set(cacheKey, {
-            data,
-            timestamp: Date.now()
-        });
-
-        return data;
+        // Use API manager with 1 minute cache
+        return await apiManager.request('warframe', `${endpoint}${WARFRAME_API_LANGUAGE}`, {}, 60000);
     } catch (error) {
-        // If we have cached data, return it even if expired during errors
-        if (cached) {
-            console.warn(`API error, using cached data: ${error}`);
-            return cached.data;
-        }
+        console.warn(`Warframe API error: ${error}`);
         throw error;
     }
 }
@@ -96,7 +62,7 @@ createCommand({
     name: "warframe",
     description: "Get Warframe game information 🎮",
     type: ApplicationCommandType.ChatInput,
-    global:true,
+    global: true,
     async run(interaction) {
         await interaction.deferReply();
 

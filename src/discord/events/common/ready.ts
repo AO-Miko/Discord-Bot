@@ -1,5 +1,5 @@
 import { createEvent } from "#base";
-import { configManager } from "#functions/configManager.js";
+import { configManager } from "#functions";
 import { logger } from "#settings";
 
 createEvent({
